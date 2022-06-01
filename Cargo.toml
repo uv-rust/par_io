@@ -10,7 +10,7 @@ repository = "https://github.com/uv-rust/par_io"
 homepage = "https://github.com/uv-rust/par_io"
 readme = "Readme.md"
 documentation = "https://docs.rs/par_io"
-keywords = ["i/o", "parallel", "async", "file"]
+keywords = ["io", "parallel", "async", "file"]
 categories = ["Asynchronous", "Filesystem", "Concurrency"]
 
 [dependencies]
