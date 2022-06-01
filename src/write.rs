@@ -108,9 +108,9 @@ fn select_tx(
 /// * `num_buffers_per_producer` - number of buffers per producer
 /// 
 /// ## Return
-/// * `Result<(), WriteError>`: number of bytes written to file or error
+/// * `Result<(), WriteError>`: number of bytes written to file or error;
 ///                             error returned form callback must implement Debug
-///                             trait and will be converted to String before
+///                             trait and is converted to `String` before
 ///                             being returned
 ///
 /// Callback signature:

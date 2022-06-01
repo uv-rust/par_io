@@ -89,6 +89,10 @@ fn select_tx(
 /// * `client_data` - data to be passed to consumer function
 /// * `num_buffers_per_producer` - number of buffers per producer; these buffers are sent to consumers and reused
 ///
+/// ## Return
+/// * `Result<Vec<(u64, R)>, ReadError>`: 
+///     * vector of `(bytes written per chunk, callback return value)` tuples or error
+/// 
 /// Callback signature:
 ///
 /// ```ignore
