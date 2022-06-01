@@ -34,7 +34,7 @@ asynchronous execution is possible.
 Current implementation allows to set the number of chunks per producer and the
 number of buffers per producer with
 
-*(number of buffers) <= (number of chunks)
+*(number of buffers) <= (number of chunks)*
 
 In the future it will be possible to explicitly specify the maximum amount of
 memory used.
