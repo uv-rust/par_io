@@ -1,0 +1,16 @@
+[package]
+name = "par_io"
+version = "0.3.3"
+authors = ["Ugo Varetto <ugovaretto@gmail.com>"]
+license = "BSD-3-Clause"
+edition = "2021"
+rust-version = "1.60"
+description = "Parallel, async file I/O library"
+#repository = "https://github.io/uv-rust/par_io"
+#homepage = "https://github.io/uv-rust/par_io"
+readme = "Readme.md"
+#documentation = ""
+keywords = ["I/O", "parallel", "async", "file"]
+categories = ["Asynchronous", "Filesystem", "Concurrency"]
+
+[dependencies]
