@@ -241,7 +241,7 @@ fn build_producers(
                         (0..cfg.consumers.len()).for_each(|x| {
                             let _ = cfg.consumers[x].send(End(i, num_producers));
                         });
-                        return Err(ReadError::IO(err));
+                        return Err(err);
                     }
                     Ok(()) => {
                         chunk_id += 1;
@@ -388,24 +388,25 @@ fn launch(
 
 // -----------------------------------------------------------------------------
 #[cfg(any(windows))]
-fn read_bytes_at(buffer: &mut Vec<u8>, file: &File, offset: u64) -> Result<(), String> {
+fn read_bytes_at(buffer: &mut Vec<u8>, file: &File, offset: u64) -> Result<(), ReadError> {
     use std::os::windows::fs::FileExt;
     let mut data_read = 0;
     while data_read < buffer.len() {
         data_read += file
             .seek_read(&mut buffer[data_read..], offset)
-            .map_err(|err| err.to_string())?;
+            .map_err(|err| ReadError::IO(err))?;
     }
+    Ok(())
 }
 
 #[cfg(any(unix))]
-fn read_bytes_at(buffer: &mut Vec<u8>, file: &File, offset: u64) -> Result<(), std::io::Error> {
+fn read_bytes_at(buffer: &mut Vec<u8>, file: &File, offset: u64) -> Result<(), ReadError> {
     use std::os::unix::fs::FileExt;
     let mut data_read = 0;
     while data_read < buffer.len() {
         data_read += file
-            .read_at(&mut buffer[data_read..], offset)?;
-            //.map_err(|err| err.to_string())?;
+            .read_at(&mut buffer[data_read..], offset)
+            .map_err(|err| ReadError::IO(err))?;
     }
     Ok(())
 }

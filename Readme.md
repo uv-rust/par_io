@@ -1,7 +1,7 @@
 # `par_io` Parallel I/O library
 
-Simple library to read and write files in parallel implementing the producer-consumer
-model.
+Simple library, with no dependencies, to read and write files in parallel
+implementing the producer-consumer model.
 
 Synchronous calls to `pread` and `pwrite` inside reader and writer threads are used
 to transfer data.
@@ -9,6 +9,35 @@ to transfer data.
 No async runtime is used since the actual file I/O is synchronous and task
 distribution and execution is controlled by the library through direct calls
 to Rust's *thread* and *mpsc* APIs.
+
+`Fn` type objects are passed by client code to the library and invoked by
+producer or consumer threads to generate or consume data.
+
+Memory buffers are created once and reused across producers and consumers, so
+no memory allocation happens after buffer creation, unless performed in the 
+callback objects provided by the client code.
+
+Total memory consumption is equal to:
+ 
+*Memory allocated in client code* +
+
+*(buffer size) x (number of buffers per producer) x (number of producers)*
+
+When only one buffer per producer is provided consumers must wait for producer
+to send the buffer and producers must wait for consumers to send the buffer
+back and therefore per-thread producer-consumer execution is synchronous.
+
+When multiple buffers per producer are used consumers can generate data while
+consumers are processing it reading from a separate buffers, and therefore full
+asynchronous execution is possible.
+
+Current implementation allows to set the number of chunks per producer and the
+number of buffers per producer with
+
+*(number of buffers) <= (number of chunks)
+
+In the future it will be possible to explicitly specify the maximum amount of
+memory used.
 
 ### Reading
 
@@ -22,15 +51,6 @@ to Rust's *thread* and *mpsc* APIs.
     6. the return value from the callback is stored into an array
     7. the buffer is moved back to the thread that sent it
     8. all the return values from all the consumer threads are merged into a single array and returned to client code
-
-
-Memory consumption is equal to:
- 
- *(buffer size) x (number of buffers per producer) x (number of producers)*
-
-and independent from number of chunks or file size.
-
-Having more than one buffer per producer queue allows reading and data consumption to overlap
 
 ### Writing
 
@@ -46,10 +66,6 @@ Having more than one buffer per producer queue allows reading and data consumpti
     6. each consumer thread returns the number of bytes written to file  
     7. the results from all consumer threads are merged into a single array returned to client code
 
-Memory consumption is equal to:
- 
- *(buffer size) x (number of buffers per producer) x (number of producers)*
-
 
 ## Usage
 
@@ -59,8 +75,8 @@ The `read_file` function returns a vector of
 
   *size = (number of chunks per producer) x (number of producers)*
 
-with each element containing the return value of the callback function consuming
-the data.
+with each element containing the return value of the callback object consuming
+the data. It is up to the callback objects to return errors as needed.
 
 The `write_to_file` function returns a `Result` instance containing the number of
 bytes written or an `Err(String)` instance.
