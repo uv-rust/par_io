@@ -8,6 +8,11 @@ use std::thread;
 use std::thread::JoinHandle;
 use core::fmt::Debug;
 
+#[cfg(any(unix))]
+use crate::io::io_at_unix::*;
+
+#[cfg(any(windows))]
+use crate::io::io_at_windows::*;
 // -----------------------------------------------------------------------------
 // TYPES
 
@@ -409,20 +414,5 @@ fn launch(
                 .map_err(|err| WriteError::Other(err.to_string()))?
         }
     }
-    Ok(())
-}
-#[cfg(any(windows))]
-fn write_bytes_at(buffer: &Vec<u8>, file: &File, offset: u64) -> Result<(), WriteError> {
-    use std::os::windows::fs::FileExt;
-    file.seek_write(buffer, offset)
-        .map_err(|err| WriteError::IO(err))?;
-    Ok(())
-}
-
-#[cfg(any(unix))]
-fn write_bytes_at(buffer: &Vec<u8>, file: &File, offset: u64) -> Result<(), WriteError> {
-    use std::os::unix::fs::FileExt;
-    file.write_all_at(buffer, offset)
-        .map_err(|err| WriteError::IO(err))?;
     Ok(())
 }

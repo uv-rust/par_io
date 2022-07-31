@@ -28,7 +28,8 @@ pub fn read_bytes_at(buffer: &mut Vec<u8>, file: &File, mut offset: u64) -> Resu
     }
     Ok(())
 }
-fn write_bytes_at(buffer: &Vec<u8>, file: &File, mut offset: u64) -> Result<(), WriteError> {
+
+pub fn write_bytes_at(buffer: &Vec<u8>, file: &File, mut offset: u64) -> Result<(), WriteError> {
     let fd = file.as_raw_fd(); 
     let mut written = 0;
     while written < buffer.len() {
