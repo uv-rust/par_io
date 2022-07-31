@@ -1,5 +1,6 @@
 use std::fs::File;
 use crate::read::ReadError;
+use crate::write::WriteError;
 pub fn read_bytes_at(buffer: &mut Vec<u8>, file: &File, mut offset: u64) -> Result<(), ReadError> {
     use std::os::windows::fs::FileExt;
     let mut data_read = 0;
