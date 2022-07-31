@@ -7,6 +7,12 @@ use std::sync::Arc;
 use std::thread;
 use std::thread::JoinHandle;
 
+#[cfg(any(unix))]
+use crate::io::io_at_unix::*;
+
+#[cfg(any(windows))]
+use crate::io::io_at_windows::*;
+
 // -----------------------------------------------------------------------------
 type Senders = Vec<Sender<Message>>;
 type Buffer = Vec<u8>;
@@ -386,31 +392,6 @@ fn launch(
                 return Err(ReadError::Send(err));
             }
         }
-    }
-    Ok(())
-}
-
-// -----------------------------------------------------------------------------
-#[cfg(any(windows))]
-fn read_bytes_at(buffer: &mut Vec<u8>, file: &File, offset: u64) -> Result<(), ReadError> {
-    use std::os::windows::fs::FileExt;
-    let mut data_read = 0;
-    while data_read < buffer.len() {
-        data_read += file
-            .seek_read(&mut buffer[data_read..], offset)
-            .map_err(|err| ReadError::IO(err))?;
-    }
-    Ok(())
-}
-
-#[cfg(any(unix))]
-fn read_bytes_at(buffer: &mut Vec<u8>, file: &File, offset: u64) -> Result<(), ReadError> {
-    use std::os::unix::fs::FileExt;
-    let mut data_read = 0;
-    while data_read < buffer.len() {
-        data_read += file
-            .read_at(&mut buffer[data_read..], offset)
-            .map_err(|err| ReadError::IO(err))?;
     }
     Ok(())
 }

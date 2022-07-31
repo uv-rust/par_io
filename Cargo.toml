@@ -1,6 +1,6 @@
 [package]
 name = "par_io"
-version = "0.3.5"
+version = "0.4.0"
 authors = ["Ugo Varetto <ugovaretto@gmail.com>"]
 license = "BSD-3-Clause"
 edition = "2021"
