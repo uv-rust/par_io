@@ -1,12 +1,12 @@
-//! A simple example of parallel reading from file. 
-//! Data is read by producer threads and sent to consumer threads which pass the 
+//! A simple example of parallel reading from file.
+//! Data is read by producer threads and sent to consumer threads which pass the
 //! data to a client callback for consumption.
-//! 
+//!
 //! Input:
-//! 
+//!
 //! * input file name
 //! * number of producer threads
-//! * number of consumer threads 
+//! * number of consumer threads
 //! * number of chunks (== tasks) per producer
 //! * number of buffers per producer
 //!
@@ -77,10 +77,10 @@ pub fn main() {
             match err {
                 ReadError::IO(err) => {
                     eprintln!("IO error: {:?}", err);
-                },
+                }
                 ReadError::Send(err) => {
                     eprintln!("Send error: {:?}", err);
-                },
+                }
                 ReadError::Other(err) => {
                     eprintln!("Error: {:?}", err);
                 }

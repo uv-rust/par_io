@@ -1,15 +1,15 @@
-//! A simple example of parallel writing to file. 
+//! A simple example of parallel writing to file.
 //! Data is generated in producer callback function and sent to writer threads
-//! 
+//!
 //! Input:
-//! 
+//!
 //! * memory buffer size
 //! * output file name
 //! * number of producer threads
-//! * number of consumer threads, 
+//! * number of consumer threads,
 //! * number of chunks (== tasks) per producer
 //! * number of buffers per producer
-//! 
+//!
 //! Usage:
 //! ```ignore
 //! cargo run --example example_parallel_write 2041 tmp-out 12 4 3 2
@@ -72,19 +72,19 @@ pub fn main() {
                 .len();
             assert_eq!(bytes_consumed, len as usize);
             std::fs::remove_file(&filename).expect("Cannot delete file");
-        },
+        }
         Err(err) => {
-            use par_io::write::{WriteError, ProducerError};
+            use par_io::write::{ProducerError, WriteError};
             match err {
-                WriteError::Producer(ProducerError{msg, offset}) => {
+                WriteError::Producer(ProducerError { msg, offset }) => {
                     eprintln!("Producer error: {} at {}", msg, offset);
-                },
+                }
                 WriteError::IO(err) => {
                     eprintln!("I/O error: {:?}", err);
-                },
+                }
                 WriteError::Other(err) => {
                     eprintln!("Error: {}", err);
-                },
+                }
             }
         }
     }

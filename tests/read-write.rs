@@ -83,7 +83,7 @@ fn read() -> Result<(), String> {
                     .map_err(|err| err.to_string())?;
                 out.write(x).map_err(|err| err.to_string())?;
             }
-        },
+        }
         Err(err) => {
             return Err(format!("{:?}", err));
         }
@@ -129,7 +129,8 @@ fn write() -> Result<(), String> {
         data.clone(),
         num_buffers_per_producer,
         len,
-    ).map_err(|err| format!("{:?}", err))?;
+    )
+    .map_err(|err| format!("{:?}", err))?;
     //4 verify result
     let len = std::fs::metadata(&filename)
         .map_err(|err| err.to_string())?
