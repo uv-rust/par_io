@@ -14,3 +14,4 @@ keywords = ["i/o", "parallel", "async", "file"]
 categories = ["Asynchronous", "Filesystem", "Concurrency"]
 
 [dependencies]
+flume = "0.10.14"
